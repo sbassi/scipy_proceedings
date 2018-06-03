@@ -7,7 +7,7 @@
 :institution: Netflix
 
 :author: Sebastian Bassi
-:email: sbassi@gmail.com
+:email: sebastian.bassi@globant.com
 :institution: Globant
 
 -------------------------------------------------------
@@ -76,7 +76,7 @@ specifying ``$PLOS_CORPUS`` will ensure that the article data won't get overwrit
 when you update the ``allofplos`` package, as the default location is within the
 package. (Forking/cloning the GitHub repository doesn't have the same problem,
 because the default corpus location is in the ``.gitignore`` file.)
-  
+
 
 .. code-block:: python
 
@@ -85,8 +85,8 @@ because the default corpus location is in the ``.gitignore`` file.)
     from allofplos import update
     update.main()
 
-Downloading new articles can also be accessed via the command line:: 
-  
+Downloading new articles can also be accessed via the command line::
+
     $ export PLOS_CORPUS="path/to/corpus_directory"
     $ python -m allofplos.update
 
@@ -113,10 +113,10 @@ To initialize a corpus (defaults to ``corpusdir``, or the location set by the
 
 
 .. code-block:: python
-  
+
    from allofplos import Corpus
    corpus = Corpus()
-   
+
 The number of articles in the corpus can be found with ``len(corpus)``. The list
 of every DOI for every article in the corpus can be found at ``corpus.dois``, and
 the path to every XML file in the corpus directory at ``corpus.filenames``. To
@@ -151,10 +151,10 @@ The lxml tree of the article is memoized in ``art.tree`` so it can be repeatedly
 called without needing to re-read the XML file.
 
 .. code-block:: python
-    
+
     >>> type(art.tree)
     lxml.etree._ElementTree
-    
+
 ``allofplos``'s article parsing focuses on metadata (e.g., article title, author
 names and institutions, date of publication, Creative Commons copyright
 license[CITE], JATS version/DTD), which are conveniently located in the ``front``
@@ -162,7 +162,7 @@ section of the XML. We designed the parsing API to quickly locate and parse XML
 elements as properties:
 
 .. code-block:: python
-    
+
     >>> art.doi
     '10.1371/journal.pone.0052669'
     >>> art.title
@@ -190,11 +190,11 @@ You can also do XPath searches on `art.tree`, which works well for finding
 article elements that aren't Article class properties.
 
 .. code-block:: python
-  
+
     >>> acknowledge = art.tree.xpath('//ack/p')[0]
     >>> acknowledge.text
     'We thank all contributors to the Performance Curve Database (pcdb.santafe.edu).'
-  
+
 Let's put these pieces together to make a list of articles that use PCR in their
 Methods section (``pcr_list``). The body of an article is divided into sections
 (with the element tag 'sec') and the element attributes of Methods sections are
@@ -227,7 +227,7 @@ the ``tostring()`` method.
 
 Query with peewee & SQLite
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
--  Query the corpus using *peewee* ORM
--  Included "starter" SQLite database
--  SQLite database constructor available
 
+-  Included "starter" SQLite database
+-  Query the corpus using *peewee* ORM
+-  SQLite database constructor
