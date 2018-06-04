@@ -128,7 +128,7 @@ through articles as such:
 .. code-block:: python
 
     for article in corpus[:10]:
-        print(article.title)
+      print(article.title)
 
 Because DOIs contain semantic meaning and XML filenames are based on the DOI, if
 you're trying to loop through the corpus, it won't be a representative sample
@@ -206,28 +206,33 @@ the ``tostring()`` method.
 
     import lxml.etree as et
     pcr_list = []
-    for article in corpus.random_sample(20):
+    for art in corpus.random_sample(20):
 
-        # Step 1: find Method sections
-        methods_sections = article.root.xpath("//sec[@sec-type='materials|methods']")
-        if not methods_sections:
-            methods_sections = article.root.xpath("//sec[@sec-type='methods']")
+      # Step 1: find Method sections
+      methods_sections = art.root.xpath("//sec[@sec-type='materials|methods']")
+      if not methods_sections:
+        methods_sections = art.root.xpath("//sec[@sec-type='methods']")
 
-        for sec in methods_sections:
+      for sec in methods_sections:
 
-            # Step 2: turn the method sections into strings
-            method_string = et.tostring(sec, method='text', encoding='unicode')
+        # Step 2: turn the method sections into strings
+        method_string = et.tostring(sec, method='text', encoding='unicode')
 
-            # Step 3: add DOI if 'PCR' in string
-            if 'PCR' in method_string:
-                pcr_list.append(article.doi)
-                break
-            else:
-                pass
+        # Step 3: add DOI if 'PCR' in string
+        if 'PCR' in method_string:
+          pcr_list.append(art.doi)
+          break
+        else:
+          pass
 
 Query with peewee & SQLite
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  Included "starter" SQLite database
+
+The *allofplos* code includes a SQLite database with all the articles in starter directory. In order to use the database, the user needs a SQLite client. The official client is command line based and can be downloaded from https://www.sqlite.org/download.html. There are graphical viewers like `DB Browser for SQLite <https://sqlitebrowser.org/>`_ and `SQLiteStudio <https://sqlitestudio.pl/index.rvt>`_. There is also some options to query the database online, without installing any software, like https://sqliteonline.com/ and http://inloop.github.io/sqlite-viewer/.
+
+The main table of the database is *plosarticle*, it has the DOI, the title, the abstract, the published date and other fields that are foreign key that link to other child tables, like *articletype* ....
+
 -  Query the corpus using *peewee* ORM
 -  SQLite database constructor
