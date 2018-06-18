@@ -225,14 +225,44 @@ the ``tostring()`` method.
         else:
           pass
 
-Query with peewee & SQLite
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Included SQLite database
+~~~~~~~~~~~~~~~~~~~~~~~~
 
--  Included "starter" SQLite database
+The *allofplos* code includes a SQLite database with all the articles in starter directory. In this release there are 122 records that represents a wide range of papers. In order to use the database, the user needs a SQLite client. The official client is command line based and can be downloaded from https://www.sqlite.org/download.html. There are graphical viewers like `DB Browser for SQLite <https://sqlitebrowser.org/>`_ and `SQLiteStudio <https://sqlitestudio.pl/index.rvt>`_. There is also some options to query the database online, without installing any software, like https://sqliteonline.com/ and http://inloop.github.io/sqlite-viewer/.
 
-The *allofplos* code includes a SQLite database with all the articles in starter directory. In order to use the database, the user needs a SQLite client. The official client is command line based and can be downloaded from https://www.sqlite.org/download.html. There are graphical viewers like `DB Browser for SQLite <https://sqlitebrowser.org/>`_ and `SQLiteStudio <https://sqlitestudio.pl/index.rvt>`_. There is also some options to query the database online, without installing any software, like https://sqliteonline.com/ and http://inloop.github.io/sqlite-viewer/.
+The main table of the database is *plosarticle*, it has the DOI, the title, the abstract, the published date and other fields that are foreign key that link to other child tables, like *articletype*, *journal_id*. The corresponding author information is stored at *correspondingauthor* table and is linked to *plosarticle* table using the relation tabled called *coauthorplosarticle*.
 
-The main table of the database is *plosarticle*, it has the DOI, the title, the abstract, the published date and other fields that are foreign key that link to other child tables, like *articletype* ....
+For example, to get all papers whose corresponding author are from France:
 
--  Query the corpus using *peewee* ORM
+.. code-block:: mysql
+
+    SELECT DOI FROM plosarticle
+    JOIN coauthorplosarticle ON
+    coauthorplosarticle.article_id = plosarticle.id
+    JOIN correspondingauthor ON
+    correspondingauthor.id = coauthorplosarticle.corr_author_id
+    JOIN country ON
+    country.id = correspondingauthor.country_id
+    WHERE country.country = 'France';
+
+This will return the DOIs from three papers from the starter database:
+
+    10.1371/journal.pcbi.1004152
+    10.1371/journal.ppat.1000105
+    10.1371/journal.pgen.1002912
+    10.1371/journal.pcbi.1004082
+
+The researcher can avoid using SQL queries by using the included Object-relational mapping (ORM) models. The ORM library used is *peewee*. A file with sample queries is stored in the repository with the name of dbtoorm.py. In this file, there is a part that defines XXXXXXXX
+
+
+query = (Plosarticle
+         .select()
+         .join(Coauthorplosarticle)
+         .join(Correspondingauthor)
+         .join(Country)
+         .join(Journal, on=(Plosarticle.journal == Journal.id))
+         .where(Country.country == 'France')
+         )
+
+
 -  SQLite database constructor
